@@ -1,0 +1,69 @@
+@use '../base' as *;
+@use '_1_tooltip.scss' as *;
+
+/* -------------------------------- 
+
+File#: _2_markdown-editor
+Title: Markdown Editor
+Descr: Editor to create markdown content
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.md-editor {
+  --md-editor-btn-size: 40px;
+  --md-editor-btn-icon-size: 16px;
+}
+
+.md-editor__btn {
+  position: relative;
+  display: flex;
+  width: var(--md-editor-btn-size);
+  height: var(--md-editor-btn-size);
+  cursor: pointer;
+
+  transition: transform 0.2s;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    inset: 0;
+    background: alpha(var(--color-contrast-higher), 0.1);
+    border-radius: var(--radius-sm);
+    transform: scale(0.85);
+    opacity: 0;
+
+    transition: 0.2s;
+  }
+
+  &:hover {
+    &::before {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+}
+
+.md-editor__btn-separator {
+  height: calc(var(--md-editor-btn-size)/2);
+  width: 1px;
+  margin: 0 var(--space-xxs);
+
+  position: relative;
+  top: calc(var(--md-editor-btn-size)/4);
+  
+  background-color: var(--color-contrast-lower);
+}
+
+.md-editor__icon {
+  position: relative;
+  z-index: 2;
+  display: block;
+  margin: auto;
+  --size: var(--md-editor-btn-icon-size);
+}

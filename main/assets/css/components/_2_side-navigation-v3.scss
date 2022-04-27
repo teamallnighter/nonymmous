@@ -1,0 +1,67 @@
+@use '../base' as *;
+@use '_1_responsive-sidebar.scss' as *;
+@use '_1_expandable-side-navigation.scss' as *;
+
+/* -------------------------------- 
+
+File#: _2_side-navigation-v3
+Title: Side Navigation v3
+Descr: A primary navigation located in the sidebar
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --side-template-mobile-header-height: 50px;
+}
+
+.side-template-v3 {
+  @include breakpoint(md, "not all") {
+    .sidebar {
+      --space-unit: 1.2rem;
+      --text-unit: 1.2rem;
+      font-size: var(--text-unit);
+    }
+  }
+}
+
+/* mobile header - hidden on bigger screens */
+.side-template-v3__mobile-header {
+  background: var(--color-bg-light);
+  height: var(--side-template-mobile-header-height);
+  box-shadow: var(--shadow-xs), var(--shadow-sm);
+
+  position: relative;
+  z-index: var(--z-index-header);
+}
+
+.side-template-v3__logo {
+  display: block;
+  width: 104px;
+  flex-shrink: 0;
+  text-decoration: none;
+
+  svg, img {
+    display: block;
+    width: inherit;
+  }
+}
+
+/* main */
+.side-template-v3__main {
+  background-color: var(--color-bg);
+}
+
+@include breakpoint(md) {
+  .side-template-v3 {
+    background: linear-gradient(to right, alpha(var(--color-contrast-lower), 0.3) 50%, var(--color-bg) 50%);
+  }
+
+  .side-template-v3__mobile-header {
+    display: none;
+  }
+
+  .side-template-v3__main {
+    min-height: 100vh;
+  }
+}

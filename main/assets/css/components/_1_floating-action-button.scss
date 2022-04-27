@@ -1,0 +1,300 @@
+@use '../base' as *;
+
+/* -------------------------------- 
+
+File#: _1_floating-action-button
+Title: Floating Action Button
+Descr: A floating button representing the primary page action
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+:root {
+  --fab-transition-duration: .3s; /* transition duration */
+  --fab-gap-y: var(--space-md); /* top/bottom gap between button and viewport - horizontal gap depends on the max-width utility class */
+
+  --fab-btn-size: 48px; /* button size */
+  --fab-btn-radius: calc(var(--fab-btn-size)/2); /* button border-radius - use px units */
+  --fab-btn-icon-size: 24px; /* icon size */
+
+  --fab-popover-radius: 6px; /* popover border-radius - use px units */
+  --fab-popover-width: 250px; /* popover width - from the @xs breakpoint */
+  --fab-popover-gap: 6px; /* gap between popover and button */
+
+  @include breakpoint(md) {
+    --fab-btn-size: 54px;
+  }
+}
+
+.fab {
+  position: fixed;
+  z-index: var(--z-index-overlay, 15); 
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: alpha(var(--color-black), 0);
+
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: background var(--fab-transition-duration), opacity var(--fab-transition-duration), visibility 0s var(--fab-transition-duration);
+}
+
+.fab--in {
+  opacity: 1;
+  visibility: visible;
+  transition: background var(--fab-transition-duration), opacity var(--fab-transition-duration);
+}
+
+.fab--bottom-right,
+.fab--bottom-left {
+  .fab__btn, .fab__popover {
+    bottom: var(--fab-gap-y);
+    bottom: calc(var(--fab-gap-y) + env(safe-area-inset-bottom)); /* fixes issue on iOS */
+  }
+}
+
+.fab--bottom-right {
+  .fab__popover-inner {
+    clip-path: inset(calc(var(--fab-popover-height) - var(--fab-btn-size)) 0 0 calc(100% - var(--fab-btn-size)) round var(--fab-btn-radius));
+
+    @include breakpoint(xs) {
+      clip-path: inset(calc(var(--fab-popover-height) - var(--fab-btn-size)) 0 0 calc(var(--fab-popover-width) - var(--fab-btn-size)) round var(--fab-btn-radius));
+    }
+  }
+}
+
+.fab--bottom-left {
+  .fab__popover-inner {
+    clip-path: inset( calc(var(--fab-popover-height) - var(--fab-btn-size)) calc(100% - var(--fab-btn-size)) 0 0 round var(--fab-btn-radius));
+
+    @include breakpoint(xs) {
+      clip-path: inset( calc(var(--fab-popover-height) - var(--fab-btn-size)) calc(var(--fab-popover-width) - var(--fab-btn-size)) 0 0 round var(--fab-btn-radius));
+    }
+  }
+}
+
+.fab--bottom-right,
+.fab--top-right {
+  .fab__btn, .fab__popover {
+    right: 0;
+  }
+}
+
+.fab--bottom-left,
+.fab--top-left {
+  .fab__btn, .fab__popover {
+    left: 0;
+  }
+}
+
+.fab--top-right,
+.fab--top-left {
+  .fab__btn, .fab__popover {
+    top: var(--fab-gap-y);
+  }
+}
+
+.fab--top-right {
+  .fab__popover-inner {
+    clip-path: inset( 0 0 calc(var(--fab-popover-height) - var(--fab-btn-size)) calc(100% - var(--fab-btn-size)) round var(--fab-btn-radius));
+
+    @include breakpoint(xs) {
+      clip-path: inset( 0 0 calc(var(--fab-popover-height) - var(--fab-btn-size)) calc(var(--fab-popover-width) - var(--fab-btn-size)) round var(--fab-btn-radius));
+    }
+  }
+}
+
+.fab--top-left  {
+  .fab__popover-inner {
+    clip-path: inset( 0 calc(100% - var(--fab-btn-size)) calc(var(--fab-popover-height) - var(--fab-btn-size)) 0 round var(--fab-btn-radius));
+
+    @include breakpoint(xs) {
+      clip-path: inset( 0 calc(var(--fab-popover-width) - var(--fab-btn-size)) calc(var(--fab-popover-height) - var(--fab-btn-size)) 0 round var(--fab-btn-radius));
+    }
+  }
+}
+
+/* button */
+.fab__btn {
+  display: block;
+  position: relative;
+  pointer-events: auto;
+  width: var(--fab-btn-size);
+  height: var(--fab-btn-size);
+  background-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--fab-btn-radius);
+  overflow: hidden;
+  touch-action: manipulation;
+
+  position: absolute;
+  z-index: 2;
+  transform: translateY(20px);
+
+  transition: box-shadow var(--fab-transition-duration), background var(--fab-transition-duration), transform var(--fab-transition-duration);
+
+  &:hover {
+    background-color: var(--color-primary-light);
+    box-shadow: var(--shadow-md);
+  }
+
+  &:active {
+    transform: translateY(2px);
+  }
+
+  .fab--in & {
+    transform: translateY(0);
+  }
+}
+
+.fab__icon-wrapper {
+  display: flex;
+  height: inherit;
+  width: inherit;
+  justify-content: center;
+  align-items: center;
+
+  transition: transform var(--fab-transition-duration) var(--ease-out);
+
+  &:last-child {
+    position: absolute;
+    top: 0;
+    transform: translateY(100%);
+
+    .fab__icon {
+      transform: rotate(-45deg);
+      opacity: 0;
+    }
+  }
+
+  .fab--active & {
+    transform: translateY(-100%);
+
+    .fab__icon {
+      opacity: 0;
+    }
+
+    &:last-child {
+      transform: translateY(0);
+
+      .fab__icon {
+        transform: rotate(0);
+        opacity: 1;
+      }
+    }
+  }
+}
+
+.fab__icon {
+  display: block;
+  height: var(--fab-btn-icon-size);
+  width: var(--fab-btn-icon-size);
+  margin: auto;
+  color: var(--color-white); /* icon color */
+  transition: transform var(--fab-transition-duration) var(--ease-in-out), opacity var(--fab-transition-duration);
+}
+
+/* popover */
+.fab__popover {
+  position: absolute;
+  z-index: 1;
+  filter: drop-shadow(0 2px 5px hsla(0, 0%, 0%, 0.2));
+  width: 100%; /* full-width on smaller devices */
+
+  @include breakpoint(xs) {
+    width: var(--fab-popover-width);
+  }
+}
+
+.fab__popover-inner {
+  max-height: calc(100vh - var(--fab-gap-y)*2 - var(--fab-btn-size));
+  overflow: auto;
+  background-color: var(--color-bg);
+  visibility: hidden;
+  transform: translateY(0);
+
+  transition: clip-path var(--fab-transition-duration) var(--ease-out), transform var(--fab-transition-duration) var(--ease-out), visibility 0s var(--fab-transition-duration);
+}
+
+.fab__content {
+  opacity: 0;
+  transition: opacity var(--fab-transition-duration), transform var(--fab-transition-duration);
+}
+
+/* --active */
+.fab--active {
+  background-color: alpha(var(--color-black), 0.9);
+  pointer-events: auto;
+
+  .fab__popover-inner {
+    visibility: visible;
+    transform: translateY(calc( -1 * var(--fab-btn-size) - var(--fab-popover-gap)));
+    clip-path: inset(0 0 0 0 round var(--fab-popover-radius));
+    transition: clip-path var(--fab-transition-duration) var(--ease-out), transform var(--fab-transition-duration) var(--ease-out), visibility 0s;
+  }
+
+  &.fab--top-left .fab__popover-inner,
+  &.fab--top-right .fab__popover-inner {
+    transform: translateY(calc( var(--fab-btn-size) + var(--fab-popover-gap)));
+  }
+
+  .fab__content {
+    opacity: 1;
+  }
+}
+
+/* menu example */
+.fab__menu {
+  list-style: none;
+}
+
+.fab__menu-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-xxs);
+  cursor: pointer;
+  line-height: 1;
+  color: inherit;
+  text-decoration: none;
+  transition: background .2s;
+
+  &:hover {
+    background-color: alpha(var(--color-contrast-higher), 0.075);
+  }
+
+}
+
+.fab__menu-img {
+  display: flex;
+  --size: 40px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  margin-right: var(--space-xxs);
+  background-color: alpha(var(--color-contrast-higher), 0.1);
+  transition: transform .3s var(--ease-out-back);
+
+  .icon {
+    margin: auto;
+  }
+
+  .fab__menu-item:hover & {
+    transform: scale(1.1);
+  }
+}
+
+.fab__menu-label {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: var(--space-xxxxs) 0;
+}
+
+.fab__menu-item--cta {
+  background-color: alpha(var(--color-contrast-higher), 0.1);
+}

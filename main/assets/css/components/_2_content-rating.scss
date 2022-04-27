@@ -1,0 +1,107 @@
+@use '../base' as *;
+@use '_1_confetti-button.scss' as *;
+
+/* -------------------------------- 
+
+File#: _2_content-rating
+Title: Content Rating
+Descr: A like/dislike feedback rating widget
+Usage: codyhouse.co/license
+
+-------------------------------- */
+
+.rate-cont {}
+
+.rate-cont__custom-input {
+  display: inline-flex;
+  align-items: center;
+
+  background-color: alpha(var(--color-contrast-higher), 0.15);
+  padding: var(--space-xxs) var(--space-xs);
+  border-radius: var(--radius-md);
+
+  color: var(--color-contrast-high);
+  line-height: 1;
+  user-select: none;
+
+  cursor: pointer;
+
+  transition: background .2s, color .2s, box-shadow .2s;
+
+  &:hover {
+    background-color: alpha(var(--color-contrast-higher), 0.2);
+  }
+
+  .rate-cont__native-input:checked + & {
+    background-color: var(--color-contrast-higher);
+    color: var(--color-bg);
+  }
+
+  .rate-cont__native-input:focus + & {
+    box-shadow: 0 0 0 3px alpha(var(--color-contrast-higher), 0.2);
+  }
+}
+
+.rate-cont__icon {
+  margin-right: var(--space-xxs);
+
+  .rate-cont__native-input:checked + .rate-cont__custom-input--yes &,
+  .rate-cont__native-input:checked + .rate-cont__custom-input--no & {
+    animation-duration: .6s;
+    animation-fill-mode: forwards;
+    will-change: transform;
+    transform-origin: left center;
+  }
+
+  .rate-cont__native-input:checked + .rate-cont__custom-input--yes & {
+    animation-name: rate-cont-anim-yes;
+  }
+
+  .rate-cont__native-input:checked + .rate-cont__custom-input--no & {
+    animation-name: rate-cont-anim-no;
+  }
+}
+
+@keyframes rate-cont-anim-yes {
+  0% {
+    transform: rotate(0) scale(1);
+  }
+
+  20% {
+    transform: rotate(10deg) scale(1.1);
+  }
+
+  50% {
+    transform: rotate(-25deg) scale(1.2);
+  }
+
+  80% {
+    transform: rotate(5deg) scale(1.2);
+  }
+
+  100% {
+    transform: rotate(0) scale(1.2);
+  }
+}
+
+@keyframes rate-cont-anim-no {
+  0% {
+    transform: rotate(0) scale(1);
+  }
+
+  20% {
+    transform: rotate(-10deg) scale(1.1);
+  }
+
+  50% {
+    transform: rotate(25deg) scale(1.2);
+  }
+
+  80% {
+    transform: rotate(-5deg) scale(1.2);
+  }
+
+  100% {
+    transform: rotate(0) scale(1.2);
+  }
+}
